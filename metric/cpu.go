@@ -9,10 +9,10 @@ type CpuMetric struct {
 	metric *prometheus.Desc
 }
 
-func NewCpuMetric() *CpuMetric {
+func NewCpuMetric(metricName string) *CpuMetric {
 	return &CpuMetric{
-		metric: prometheus.NewDesc("cpu",
-			"cpu count",
+		metric: prometheus.NewDesc("cpu_"+metricName,
+			metricName+" cpu count",
 			nil, nil,
 		),
 	}

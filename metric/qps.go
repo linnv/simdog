@@ -10,11 +10,11 @@ type QpsMetric struct {
 	metric *prometheus.Desc
 }
 
-func NewQpsMetric() *QpsMetric {
+func NewQpsMetric(metricName string) *QpsMetric {
 	go cal()
 	return &QpsMetric{
-		metric: prometheus.NewDesc("http_request_count_second",
-			"http qps",
+		metric: prometheus.NewDesc("http_qps_"+metricName,
+			metricName+" http qps",
 			nil, nil,
 		),
 	}

@@ -9,10 +9,10 @@ type NetMetric struct {
 	metric *prometheus.Desc
 }
 
-func NewNetMetric() *NetMetric {
+func NewNetMetric(metricName string) *NetMetric {
 	return &NetMetric{
-		metric: prometheus.NewDesc("socket_tcp",
-			"tcp connection count",
+		metric: prometheus.NewDesc("socket_tcp_"+metricName,
+			metricName+" tcp connection count",
 			nil, nil,
 		),
 	}

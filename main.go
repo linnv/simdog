@@ -24,15 +24,14 @@ func (m *mid) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	metric.IncQps()
 }
 
-var sleepTime []int
-
 func main() {
 	manhelp.BasicManHelp()
 	manhelp.Main()
 
-	prometheus.MustRegister(metric.NewCpuMetric())
-	prometheus.MustRegister(metric.NewNetMetric())
-	prometheus.MustRegister(metric.NewQpsMetric())
+	appName := "demo"
+	prometheus.MustRegister(metric.NewCpuMetric(appName))
+	prometheus.MustRegister(metric.NewNetMetric(appName))
+	prometheus.MustRegister(metric.NewQpsMetric(appName))
 
 	m := &mid{}
 	p := flag.Int64("p", 8019, "port")
@@ -40,10 +39,6 @@ func main() {
 
 	var port = fmt.Sprintf(":%d", *p)
 	http.Handle("/metrics", promhttp.Handler())
-
-	for i := 0; i < 10; i++ {
-		sleepTime = append(sleepTime, 10-i)
-	}
 
 	//@TODO  mutex
 	gb := []byte(`good job`)
