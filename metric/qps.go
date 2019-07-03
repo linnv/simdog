@@ -35,6 +35,11 @@ var (
 	qps      uint64
 )
 
+func GetQps() uint64 {
+	qps = gIntCur - gIntLast
+	return qps
+}
+
 func IncQps() {
 	gIntCur++
 }
