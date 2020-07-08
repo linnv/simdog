@@ -1,6 +1,7 @@
 package metric
 
 import (
+	"sync"
 	"time"
 
 	"github.com/prometheus/client_golang/prometheus"
@@ -34,10 +35,13 @@ var (
 	gIntLast uint64
 	qps      uint64
 )
+var mux sync.Mutex
 
 func GetQps() uint64 {
-	qps = gIntCur - gIntLast
-	return qps
+	mux.Lock()
+	ret := qps
+	mux.Unlock()
+	return ret
 }
 
 func IncQps() {
@@ -48,11 +52,12 @@ func cal() {
 	tick := time.NewTicker(1 * time.Second)
 	for {
 		//@TODO clean up
-		//@TODO mutex
 		select {
 		case <-tick.C:
+			mux.Lock()
 			qps = gIntCur - gIntLast
 			gIntLast = gIntCur
+			mux.Unlock()
 		}
 	}
 }
