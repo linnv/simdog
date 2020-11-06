@@ -3,7 +3,6 @@ package simdog
 import (
 	"fmt"
 	"os"
-	"os/user"
 	"runtime"
 	"strings"
 	"time"
@@ -12,15 +11,15 @@ import (
 )
 
 var (
-	Version      = "None"
-	GitHash      = "NoneHash"
-	GitBranch    = "NoneBranch"
-	COYPRIGHT    = "©2018-%d %s"
-	Owner        = "jialinwu"
-	BuildTime    = "None"
-	BuildUser, _ = user.Current()
-	BuildHost, _ = os.Hostname()
-	GoVersion    = runtime.Version()
+	Version   = "None"
+	GitHash   = "NoneHash"
+	GitBranch = "NoneBranch"
+	COYPRIGHT = "©2018-%d %s"
+	Owner     = "jialinwu"
+	BuildTime = "None"
+	BuildUser = "None"
+	BuildHost = "None"
+	GoVersion = runtime.Version()
 )
 
 var versionTemplate = `
@@ -34,11 +33,7 @@ Copyright %s
 `
 
 func ReadBuildInfoNoExit() {
-	var username string
-	if BuildUser != nil {
-		username = BuildUser.Username
-	}
-	buildContext := fmt.Sprintf("%s@%s %s", username, BuildHost, BuildTime)
+	buildContext := fmt.Sprintf("%s@%s %s", BuildUser, BuildHost, BuildTime)
 	if len(GitHash) > 0 {
 		fmt.Printf(versionTemplate, Version, GitBranch, GitHash[:7], GoVersion, buildContext, fmt.Sprintf(COYPRIGHT, time.Now().Year(), Owner))
 	} else {
@@ -60,10 +55,6 @@ func ReadBuildInfo() {
 
 // NewVersionCollector returns a collector that exports metrics about current version information.
 func NewVersionCollector(appName string) prometheus.Collector {
-	var username string
-	if BuildUser != nil {
-		username = BuildUser.Username
-	}
 	return prometheus.NewGaugeFunc(
 		prometheus.GaugeOpts{
 			Namespace: appName,
@@ -78,7 +69,7 @@ func NewVersionCollector(appName string) prometheus.Collector {
 				"version":   Version,
 				"goversion": GoVersion,
 				"buildhost": BuildHost,
-				"builduser": username,
+				"builduser": BuildUser,
 				"buildtime": BuildTime,
 				"platform":  runtime.GOOS + "/" + runtime.GOARCH,
 			},

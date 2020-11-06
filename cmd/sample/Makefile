@@ -12,6 +12,8 @@ LDFLAGS += -X "github.com/linnv/simdog.BuildTime=$(shell date -u '+%Y-%m-%d %I:%
 LDFLAGS += -X "github.com/linnv/simdog.GitBranch=$(shell git rev-parse --abbrev-ref HEAD)"
 LDFLAGS += -X "github.com/linnv/simdog.GitHash=$(shell git rev-parse HEAD)"
 LDFLAGS += -X "github.com/linnv/simdog.Owner=jialin"
+LDFLAGS += -X "github.com/linnv/simdog.BuildHost=$(shell hostname)"
+LDFLAGS += -X "github.com/linnv/simdog.BuildUser=$(shell whoami)"
 
 all: build
 
@@ -26,5 +28,5 @@ linux:
 	@mkdir -p $(OUTPUTDIR)
 	$(LINUX) $(GOBUILD) -ldflags '$(LDFLAGS)' -o $(TARGETBIN)_linux $(BUILDDIR)/main.go
 clean: 
-	@rm $(TARGETBIN)*
+	@rm -rf $(TARGETBIN)*
 
