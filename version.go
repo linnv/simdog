@@ -2,6 +2,7 @@ package simdog
 
 import (
 	"fmt"
+	"net/http"
 	"os"
 	"runtime"
 	"strings"
@@ -33,11 +34,15 @@ Copyright %s
 `
 
 func ReadBuildInfoNoExit() {
+	print(readBuildInfoNoExit())
+}
+
+func readBuildInfoNoExit() string {
 	buildContext := fmt.Sprintf("%s@%s %s", BuildUser, BuildHost, BuildTime)
 	if len(GitHash) > 0 {
-		fmt.Printf(versionTemplate, Version, GitBranch, GitHash[:7], GoVersion, buildContext, fmt.Sprintf(COYPRIGHT, time.Now().Year(), Owner))
+		return fmt.Sprintf(versionTemplate, Version, GitBranch, GitHash[:7], GoVersion, buildContext, fmt.Sprintf(COYPRIGHT, time.Now().Year(), Owner))
 	} else {
-		fmt.Printf(versionTemplate, Version, GitBranch, GitHash, GoVersion, buildContext, fmt.Sprintf(COYPRIGHT, time.Now().Year(), Owner))
+		return fmt.Sprintf(versionTemplate, Version, GitBranch, GitHash, GoVersion, buildContext, fmt.Sprintf(COYPRIGHT, time.Now().Year(), Owner))
 	}
 }
 
@@ -76,4 +81,8 @@ func NewVersionCollector(appName string) prometheus.Collector {
 		},
 		func() float64 { return 1 },
 	)
+}
+
+func VersionHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintln(w, readBuildInfoNoExit())
 }

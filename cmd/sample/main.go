@@ -40,10 +40,7 @@ func main() {
 	http.Handle("/metrics", promhttp.Handler())
 
 	//@TODO  mutex
-	gb := []byte(`good job`)
-	http.Handle("/a", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Write(gb)
-	}))
+	http.Handle("/version", http.HandlerFunc(simdog.VersionHandler))
 
 	srv := &http.Server{
 		Handler: m,
