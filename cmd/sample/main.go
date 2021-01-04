@@ -41,6 +41,7 @@ func main() {
 
 	//@TODO  mutex
 	http.Handle("/version", http.HandlerFunc(simdog.VersionHandler))
+	http.Handle("/health", http.HandlerFunc(simdog.HeadlCheckHandler))
 
 	srv := &http.Server{
 		Handler: m,
