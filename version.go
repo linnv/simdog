@@ -86,3 +86,19 @@ func NewVersionCollector(appName string) prometheus.Collector {
 func VersionHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintln(w, readBuildInfoNoExit())
 }
+
+//LogVersion assigns version info to params
+func LogVersion(params map[string]string) {
+	if params == nil {
+		params = make(map[string]string)
+	}
+
+	params["hash"] = GitHash
+	params["branch"] = GitBranch
+	params["version"] = Version
+	params["goversion"] = GoVersion
+	params["buildhost"] = BuildHost
+	params["builduser"] = BuildUser
+	params["buildtime"] = BuildTime
+	params["platform"] = runtime.GOOS + "/" + runtime.GOARCH
+}
