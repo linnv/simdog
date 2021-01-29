@@ -45,7 +45,9 @@ func GetQps() uint64 {
 }
 
 func IncQps() {
+	mux.Lock()
 	gIntCur++
+	mux.Unlock()
 }
 
 func cal() {
