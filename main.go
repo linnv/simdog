@@ -62,4 +62,5 @@ func main() {
 	signal.Notify(sigChan, os.Interrupt, os.Kill)
 	log.Print("use c-c to exit: \n")
 	<-sigChan
+	srv.Close()
 }
